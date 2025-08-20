@@ -2,7 +2,7 @@
 
 import Question from "../components/Question";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { setAnswer } from "@/lib/features/modal/modalSlice";
+import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
 
 export default function FoundJobQ1() {
   const answers = useAppSelector((state) => state.modal.answers);
@@ -12,6 +12,13 @@ export default function FoundJobQ1() {
     !!answers.rolesApplied &&
     !!answers.emailedDirectly &&
     !!answers.interviews;
+
+  const nextPage = () => {
+    // TODO: save to database
+    dispatch(setAnswer(answers));
+    // Go to next page
+    dispatch(setPageName("foundJobQ2"));
+  };
 
   return (
     <div className="mx-auto max-w-[296px] md:max-w-none">
@@ -66,7 +73,9 @@ export default function FoundJobQ1() {
 
       <button
         disabled={!ready}
-        onClick={() => {}}
+        onClick={() => {
+          if (ready) nextPage();
+        }}
         className="w-full rounded-[14px] border border-gray-200 px-4 py-4 text-[16px] font-semibold
                    bg-gray-100 text-gray-600 disabled:opacity-60 data-[ok=true]:bg-white data-[ok=true]:text-gray-900
                    hover:data-[ok=true]:bg-gray-50"

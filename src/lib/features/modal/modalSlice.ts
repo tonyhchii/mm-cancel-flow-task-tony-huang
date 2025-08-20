@@ -6,6 +6,9 @@ type Answer = {
   rolesApplied?: "0" | "1-5" | "6-20" | "20+";
   emailedDirectly?: "0" | "1-5" | "6-20" | "20+";
   interviews?: "0" | "1-2" | "3-5" | "5+";
+  foundFeedback?: string;
+  visaLawyerProvided?: boolean;
+  visaType?: string;
   // Add more answer fields as needed
 };
 
