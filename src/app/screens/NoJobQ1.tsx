@@ -15,12 +15,12 @@ export default function NoJobQ1() {
 
   const accept = () => {
     dispatch(setAnswer({ downsellAccepted: true }));
-    dispatch(setPageName(""));
+    dispatch(setPageName("acceptedOffer"));
   };
 
   const decline = () => {
     dispatch(setAnswer({ downsellAccepted: false }));
-    dispatch(setPageName(""));
+    dispatch(setPageName("noJobQ2"));
   };
 
   return (

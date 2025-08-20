@@ -10,19 +10,34 @@ type Answer = {
   visaLawyerProvided?: boolean;
   visaType?: string;
   downsellAccepted?: boolean;
+  cancelReason?:
+    | "too_expensive"
+    | "platform_not_helpful"
+    | "not_enough_jobs"
+    | "decided_not_to_move"
+    | "other";
   // Add more answer fields as needed
 };
+
+interface User {
+  userId: string;
+  subscriptionPrice: number;
+  subscriptionCurrentPeriodEnd: string;
+  userVariant: "A" | "B";
+}
 
 interface ModalState {
   isOpen: boolean;
   pageName: string;
   answers: Partial<Answer>;
+  user?: User;
 }
 
 const initialState: ModalState = {
   isOpen: false,
   pageName: "",
   answers: {},
+  user: undefined,
 };
 
 const modalSlice = createSlice({
@@ -41,14 +56,24 @@ const modalSlice = createSlice({
     setAnswer(state, action: PayloadAction<Partial<Answer>>) {
       state.answers = { ...state.answers, ...action.payload };
     },
+    setUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+    },
     resetModal(state) {
       state.isOpen = false;
       state.pageName = "";
       state.answers = {};
+      state.user = undefined;
     },
   },
 });
 
-export const { openModal, closeModal, setPageName, setAnswer, resetModal } =
-  modalSlice.actions;
+export const {
+  openModal,
+  closeModal,
+  setPageName,
+  setAnswer,
+  resetModal,
+  setUser,
+} = modalSlice.actions;
 export default modalSlice.reducer;
