@@ -1,6 +1,10 @@
 "use client";
 
+import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import { useAppDispatch } from "@/lib/hooks";
+
 export default function ScreenOne() {
+  const dispatch = useAppDispatch();
   return (
     <div className="flex-1">
       <h3 className="text-[24px] md:text-[36px] font-semibold text-warm-800 leading-[1.2] tracking-[-0.01em] md:tracking-[-0.05em]">
@@ -23,7 +27,10 @@ export default function ScreenOne() {
           className="min-w-0 whitespace-normal text-center rounded-md border border-warm-300 bg-white px-3 py-3
                      text-[16px] font-semibold text-warm-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-          onClick={() => {}}
+          onClick={() => {
+            dispatch(setAnswer({ foundJob: true }));
+            dispatch(setPageName("foundJobQ1"));
+          }}
         >
           Yes, I’ve found a job
         </button>
@@ -31,7 +38,9 @@ export default function ScreenOne() {
           className="min-w-0 whitespace-normal text-center rounded-md border border-warm-300 bg-white px-3 py-3
                      text-[16px] font-semibold text-warm-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-          onClick={() => {}}
+          onClick={() => {
+            dispatch(setAnswer({ foundJob: false }));
+          }}
         >
           Not yet — I’m still looking
         </button>

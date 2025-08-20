@@ -3,11 +3,7 @@
 import { useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import {
-  openModal,
-  closeModal,
-  setPageName,
-} from "../lib/features/modal/modalSlice";
+import { openModal, setPageName } from "../lib/features/modal/modalSlice";
 import ModalShell from "./components/ModalShell";
 import { SCREENS } from "./screens";
 
@@ -62,9 +58,6 @@ export default function ProfilePage() {
   };
 
   // Example: close modal
-  const handleCloseModal = () => {
-    dispatch(closeModal());
-  };
 
   if (loading) {
     return (

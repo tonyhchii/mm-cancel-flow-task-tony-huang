@@ -2,7 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Answer = {
   foundJob?: boolean;
-  foundJobMM?: boolean;
+  foundViaMM?: boolean;
+  rolesApplied?: "0" | "1-5" | "6-20" | "20+";
+  emailedDirectly?: "0" | "1-5" | "6-20" | "20+";
+  interviews?: "0" | "1-2" | "3-5" | "5+";
   // Add more answer fields as needed
 };
 

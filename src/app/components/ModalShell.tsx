@@ -2,7 +2,7 @@
 
 import CityImage from "./CityImage";
 import { useAppDispatch } from "@/lib/hooks";
-import { closeModal } from "@/lib/features/modal/modalSlice";
+import { closeModal, resetModal } from "@/lib/features/modal/modalSlice";
 
 export default function ModalShell({
   children,
@@ -12,6 +12,7 @@ export default function ModalShell({
   const dispatch = useAppDispatch();
   const handleClose = () => {
     dispatch(closeModal());
+    dispatch(resetModal());
   };
   return (
     <div
