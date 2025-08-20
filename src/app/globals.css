@@ -10,6 +10,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-warm-900: #2f2a26;
+  --color-warm-800: #3e3a35;
+  --color-warm-700: #57524b;
+  --color-warm-600: #6f6a62;
+  --color-warm-300: #e9e4de;
 }
 
 @media (prefers-color-scheme: dark) {

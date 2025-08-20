@@ -8,6 +8,8 @@ import {
   closeModal,
   setPageName,
 } from "../lib/features/modal/modalSlice";
+import ModalShell from "./components/ModalShell";
+import { SCREENS } from "./screens";
 
 // Mock user data for UI display
 const mockUser = {
@@ -40,6 +42,7 @@ export default function ProfilePage() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.modal.isOpen);
   const pageName = useAppSelector((state) => state.modal.pageName);
+  const Screen = SCREENS[pageName];
   const handleSignOut = async () => {
     setIsSigningOut(true);
     // Simulate sign out delay
@@ -383,7 +386,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={() => {
-                        handleOpenModal("Cancel Migrate Mate");
+                        handleOpenModal("screenOne");
                       }}
                       className="inline-flex items-center justify-center w-full px-4 py-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-200 shadow-sm group"
                     >
@@ -413,17 +416,9 @@ export default function ProfilePage() {
         </div>
       </div>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white rounded-lg shadow-lg p-8 min-w-[320px] flex flex-col items-center">
-            <h2 className="text-xl font-bold mb-4">{pageName}</h2>
-            <button
-              onClick={handleCloseModal}
-              className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <ModalShell>
+          <Screen />
+        </ModalShell>
       )}
     </div>
   );

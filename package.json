@@ -11,10 +11,12 @@
     "db:setup": "supabase start && PGPASSWORD=postgres psql -h localhost -p 54322 -U postgres -d postgres -f seed.sql"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "@supabase/supabase-js": "^2.50.5",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
