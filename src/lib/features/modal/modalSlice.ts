@@ -9,6 +9,7 @@ type Answer = {
   foundFeedback?: string;
   visaLawyerProvided?: boolean;
   visaType?: string;
+  downsellAccepted?: boolean;
   // Add more answer fields as needed
 };
 

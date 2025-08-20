@@ -40,6 +40,7 @@ export default function ScreenOne() {
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
           onClick={() => {
             dispatch(setAnswer({ foundJob: false }));
+            dispatch(setPageName("noJobQ1"));
           }}
         >
           Not yet — I’m still looking
