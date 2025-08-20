@@ -15,6 +15,7 @@
   --color-warm-700: #57524b;
   --color-warm-600: #6f6a62;
   --color-warm-300: #e9e4de;
+  --color-warm-200: #f2eeeb;
 }
 
 @media (prefers-color-scheme: dark) {

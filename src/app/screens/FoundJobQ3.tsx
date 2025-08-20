@@ -75,6 +75,7 @@ export default function FoundJobQ3() {
               value="yes"
               checked={hasLawyer === true}
               onClick={() => choose(true)}
+              onChange={() => {}}
               className="h-4 w-4 accent-gray-800"
             />
             <span className="text-[14px] text-gray-800">Yes</span>
@@ -92,6 +93,7 @@ export default function FoundJobQ3() {
               value="no"
               checked={hasLawyer === false}
               onClick={() => choose(false)}
+              onChange={() => {}}
               className="h-4 w-4 accent-gray-800"
             />
             <span className="text-[14px] text-gray-800">No</span>
