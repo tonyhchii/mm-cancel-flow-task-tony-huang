@@ -1,6 +1,10 @@
 "use client";
 
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  setAnswer,
+  setPageName,
+  updateCancellationAnswers,
+} from "@/lib/features/modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import * as React from "react";
 
@@ -13,10 +17,10 @@ export default function FoundJobQ2() {
   const dispatch = useAppDispatch();
   const ok = count >= MIN;
 
-  const nextPage = () => {
+  const nextPage = async () => {
     // TODO: save to database
     dispatch(setAnswer({ foundFeedback: text }));
-    // Go to next page
+    await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("foundJobQ3"));
   };
 

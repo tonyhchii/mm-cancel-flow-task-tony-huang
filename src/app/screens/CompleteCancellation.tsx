@@ -1,7 +1,10 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { closeModal } from "@/lib/features/modal/modalSlice";
+import {
+  closeModal,
+  completeCancellation,
+} from "@/lib/features/modal/modalSlice";
 import Image from "next/image";
 
 export default function CompleteCancellation() {
@@ -14,8 +17,9 @@ export default function CompleteCancellation() {
   const agentEmail = "mihailo@migratemate.co";
   const initials = "MB";
 
-  const finishCancellation = () => {
+  const finishCancellation = async () => {
     // TODO: DB UPDATE and other logic
+    await dispatch(completeCancellation()).unwrap();
     dispatch(closeModal());
   };
 

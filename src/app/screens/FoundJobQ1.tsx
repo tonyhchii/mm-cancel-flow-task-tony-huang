@@ -2,7 +2,11 @@
 
 import Question from "../components/Question";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  setAnswer,
+  setPageName,
+  updateCancellationAnswers,
+} from "@/lib/features/modal/modalSlice";
 
 export default function FoundJobQ1() {
   const answers = useAppSelector((state) => state.modal.answers);
@@ -13,10 +17,11 @@ export default function FoundJobQ1() {
     !!answers.emailedDirectly &&
     !!answers.interviews;
 
-  const nextPage = () => {
+  const nextPage = async () => {
     // TODO: save to database
     dispatch(setAnswer(answers));
     // Go to next page
+    await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("foundJobQ2"));
   };
 

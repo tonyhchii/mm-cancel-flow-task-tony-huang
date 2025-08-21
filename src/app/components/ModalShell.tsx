@@ -12,7 +12,6 @@ export default function ModalShell({
   const dispatch = useAppDispatch();
   const handleClose = () => {
     dispatch(closeModal());
-    dispatch(resetModal());
   };
   return (
     <div

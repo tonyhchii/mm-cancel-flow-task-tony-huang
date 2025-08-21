@@ -2,7 +2,11 @@
 
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  acceptDownsell,
+  closeModal,
+  resetModal,
+} from "@/lib/features/modal/modalSlice";
 
 const FALLBACK_PRICE = 12.5;
 
@@ -13,7 +17,7 @@ export default function AcceptedOffer() {
       ? user.subscriptionPrice - 10
       : FALLBACK_PRICE;
 
-  // Use whatever field you store this under; falls back to placeholder text
+  const dispatch = useAppDispatch();
   const endIso: string | undefined = user?.subscriptionCurrentPeriodEnd;
 
   const endDate = endIso ? new Date(endIso) : undefined;
@@ -31,8 +35,10 @@ export default function AcceptedOffer() {
         })
       : "XX date";
 
-  const proceed = () => {
+  const proceed = async () => {
     //close page and undo user cancellation
+    await dispatch(acceptDownsell()).unwrap();
+    dispatch(closeModal());
   };
 
   return (

@@ -2,7 +2,11 @@
 
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { closeModal, resetModal } from "@/lib/features/modal/modalSlice";
+import {
+  closeModal,
+  completeCancellation,
+  resetModal,
+} from "@/lib/features/modal/modalSlice";
 
 export default function SubscriptionCancelledBody() {
   const dispatch = useAppDispatch();
@@ -29,11 +33,9 @@ export default function SubscriptionCancelledBody() {
       })
     : "XX date";
 
-  const backToJobs = () => {
-    // If you prefer routing instead, replace with next/navigation:
-    // router.push("/jobs")
+  const backToJobs = async () => {
+    await dispatch(completeCancellation()).unwrap();
     dispatch(closeModal());
-    dispatch(resetModal());
   };
 
   return (

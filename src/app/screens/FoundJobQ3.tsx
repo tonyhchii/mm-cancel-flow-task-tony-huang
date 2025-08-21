@@ -2,7 +2,11 @@
 
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  setAnswer,
+  setPageName,
+  updateCancellationAnswers,
+} from "@/lib/features/modal/modalSlice";
 import { useState } from "react";
 
 export default function FoundJobQ3() {
@@ -27,8 +31,9 @@ export default function FoundJobQ3() {
     dispatch(setAnswer({ visaType: e.target.value }));
   };
 
-  const complete = () => {
+  const complete = async () => {
     // TODO: persist to DB if needed
+    await dispatch(updateCancellationAnswers({ answers })).unwrap();
     if (hasLawyer) dispatch(setPageName("completeCancellation"));
   };
 

@@ -2,7 +2,12 @@
 
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  setAnswer,
+  setPageName,
+  updateCancellationAnswers,
+  acceptDownsell,
+} from "@/lib/features/modal/modalSlice";
 
 type ReasonKey =
   | "too_expensive"
@@ -14,17 +19,7 @@ type ReasonKey =
 export default function NoJobQ3() {
   const dispatch = useAppDispatch();
   const answers = useAppSelector((s) => s.modal.answers ?? {});
-  const user = useAppSelector(
-    (s) =>
-      s.modal.user as
-        | {
-            userId: string;
-            subscriptionPrice: number;
-            subscriptionCurrentPeriodEnd: string;
-            userVariant: "A" | "B";
-          }
-        | undefined
-  );
+  const user = useAppSelector((s) => s.modal.user);
 
   const selected = answers.cancelReason as ReasonKey | undefined;
 
@@ -33,14 +28,16 @@ export default function NoJobQ3() {
 
   const setReason = (r: ReasonKey) => dispatch(setAnswer({ cancelReason: r }));
 
-  const acceptDiscount = () => {
+  const accept = async () => {
+    await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
   };
 
-  const completeCancel = () => {
+  const completeCancel = async () => {
     if (!selected) return;
     // TODO: call your cancel API, then navigate:
+    await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("cancellationComplete2"));
   };
 
@@ -100,13 +97,15 @@ export default function NoJobQ3() {
       <div className="my-4 h-px w-full bg-gray-200" />
 
       {/* Re-offer CTA */}
-      <button
-        onClick={acceptDiscount}
-        className="w-full rounded-[12px] bg-green-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-      >
-        Get 50% off | ${discounted}{" "}
-        <span className="ml-1 text-white/80 line-through">${fullPrice}</span>
-      </button>
+      {user.userVariant === "B" && (
+        <button
+          onClick={accept}
+          className="w-full rounded-[12px] bg-green-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          Get 50% off | ${discounted}{" "}
+          <span className="ml-1 text-white/80 line-through">${fullPrice}</span>
+        </button>
+      )}
 
       {/* Complete cancellation */}
       <button

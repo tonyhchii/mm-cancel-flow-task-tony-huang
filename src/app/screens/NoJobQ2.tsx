@@ -2,7 +2,12 @@
 
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  acceptDownsell,
+  setAnswer,
+  setPageName,
+  updateCancellationAnswers,
+} from "@/lib/features/modal/modalSlice";
 
 type Bucket4 = "0" | "1-5" | "6-20" | "20+";
 type BucketInterview = "0" | "1-2" | "3-5" | "5+";
@@ -13,17 +18,7 @@ export default function NoJobQ2() {
   const dispatch = useAppDispatch();
 
   const answers = useAppSelector((s) => s.modal.answers ?? {});
-  const user = useAppSelector(
-    (s) =>
-      s.modal.user as
-        | {
-            userId: string;
-            subscriptionPrice: number;
-            subscriptionCurrentPeriodEnd: string;
-            userVariant: "A" | "B";
-          }
-        | undefined
-  );
+  const user = useAppSelector((s) => s.modal.user);
 
   const fullPrice = user?.subscriptionPrice ?? 25;
   const discounted = (fullPrice / 2).toFixed(2);
@@ -32,13 +27,17 @@ export default function NoJobQ2() {
     answers.rolesApplied && answers.emailedDirectly && answers.interviews
   );
 
-  const acceptDiscount = () => {
+  const acceptDiscount = async () => {
+    await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
   };
 
-  const onContinue = () => {
-    if (allAnswered) dispatch(setPageName("noJobQ3"));
+  const onContinue = async () => {
+    if (allAnswered) {
+      await dispatch(updateCancellationAnswers({ answers })).unwrap();
+      dispatch(setPageName("noJobQ3"));
+    }
   };
 
   return (
@@ -78,14 +77,15 @@ export default function NoJobQ2() {
       />
 
       {/* Re-offer CTA */}
-      <button
-        onClick={acceptDiscount}
-        className="mt-5 w-full rounded-[12px] bg-green-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-      >
-        Get 50% off | ${discounted}{" "}
-        <span className="ml-1 text-white/80 line-through">${fullPrice}</span>
-      </button>
-
+      {user.userVariant == "B" && (
+        <button
+          onClick={acceptDiscount}
+          className="mt-5 w-full rounded-[12px] bg-green-600 px-4 py-3 text-[15px] font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          Get 50% off | ${discounted}{" "}
+          <span className="ml-1 text-white/80 line-through">${fullPrice}</span>
+        </button>
+      )}
       {/* Continue (disabled until all answered) */}
       <button
         disabled={!allAnswered}

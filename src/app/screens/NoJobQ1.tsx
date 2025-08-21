@@ -2,7 +2,11 @@
 
 import * as React from "react";
 import { useAppDispatch } from "@/lib/hooks";
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  acceptDownsell,
+  setAnswer,
+  setPageName,
+} from "@/lib/features/modal/modalSlice";
 
 // Tweak these to match your flow
 // next step if they say "No thanks"
@@ -13,7 +17,8 @@ const DISCOUNTED = 12.5;
 export default function NoJobQ1() {
   const dispatch = useAppDispatch();
 
-  const accept = () => {
+  const accept = async () => {
+    await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
   };

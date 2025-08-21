@@ -46,6 +46,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (sub.status === "cancelled") {
+      return NextResponse.json(
+        { error: "Subscription must be active to cancel" },
+        { status: 409 }
+      );
+    }
+
     // 2) Return existing in-progress cancellation if present
     const { data: existing, error: selErr } = await supabaseAdmin
       .from("cancellations")
