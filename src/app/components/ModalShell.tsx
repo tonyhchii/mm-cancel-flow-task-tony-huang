@@ -12,6 +12,9 @@ export default function ModalShell({
 }) {
   const dispatch = useAppDispatch();
   const progress = useAppSelector((s) => s.modal.step);
+  const showImageMobile = useAppSelector(
+    (s) => s.modal.showImageMobile ?? true
+  );
   const downsellAccepted = useAppSelector(
     (s) => s.modal.answers?.downsellAccepted
   );
@@ -78,7 +81,7 @@ export default function ModalShell({
         <div className="p-3 md:p-6 overflow-y-auto">
           <div className="flex flex-col md:flex-row-reverse md:items-stretch md:gap-6">
             {/* Image: hide on mobile when showImageMobile=false; always show on md+ */}
-            <div className={`flex`}>
+            <div className={`${showImageMobile ? "flex" : "hidden"} md:flex`}>
               <CityImage />
             </div>
             {/* Content */}

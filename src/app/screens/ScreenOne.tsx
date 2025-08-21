@@ -4,6 +4,7 @@ import {
   setAnswer,
   setPageName,
   setStep,
+  setShowImageMobile,
 } from "@/lib/features/modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
@@ -13,6 +14,7 @@ export default function ScreenOne() {
 
   const stillLooking = () => {
     dispatch(setAnswer({ foundJob: false }));
+    dispatch(setShowImageMobile(false));
     if (variant == "A") {
       dispatch(setPageName("noJobQ2"));
       dispatch(setStep({ total: 2, active: 1 }));
@@ -23,6 +25,7 @@ export default function ScreenOne() {
   };
 
   const goFoundJob = () => {
+    dispatch(setShowImageMobile(false));
     dispatch(setAnswer({ foundJob: true }));
     dispatch(setPageName("foundJobQ1"));
     dispatch(setStep({ total: 3, active: 1 }));

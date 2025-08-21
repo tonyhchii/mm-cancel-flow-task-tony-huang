@@ -129,6 +129,7 @@ interface ModalState {
   cancellationId: string;
   isOpen: boolean;
   step?: { total: number; active: number };
+  showImageMobile?: boolean;
   pageName: string;
   answers: Partial<Answer>;
   user: User;
@@ -139,6 +140,7 @@ interface ModalState {
 const initialState: ModalState = {
   cancellationId: "",
   isOpen: false,
+  showImageMobile: true,
   pageName: "",
   answers: {},
   user: {
@@ -177,6 +179,9 @@ const modalSlice = createSlice({
     setStep(state, action: PayloadAction<{ total: number; active: number }>) {
       state.step = action.payload;
     },
+    setShowImageMobile(state, action: PayloadAction<boolean>) {
+      state.showImageMobile = action.payload;
+    },
     resetModal(state) {
       state.isOpen = false;
       state.pageName = "";
@@ -206,5 +211,6 @@ export const {
   setStep,
   clearStep,
   setSubscription,
+  setShowImageMobile,
 } = modalSlice.actions;
 export default modalSlice.reducer;
