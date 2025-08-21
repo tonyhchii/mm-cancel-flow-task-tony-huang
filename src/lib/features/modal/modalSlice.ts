@@ -1,4 +1,44 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "@/lib/store";
+
+type Cancellation = {
+  id: string;
+  subscription_id: string;
+  downsell_variant: "A" | "B";
+  status: "in_progress" | "submitted";
+  session_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export const startCancellation = createAsyncThunk<
+  Cancellation, // return type
+  void, // args (none — we read from state)
+  { state: RootState }
+>("modal/startCancellation", async (_arg, { getState, rejectWithValue }) => {
+  const { modal } = getState();
+  const user = modal.user; // { userId, ... }
+  const subscriptionId = modal.subscription?.id; // wherever you keep it
+
+  // If you don’t have subscriptionId in state, you can change your API to fetch it server-side
+  if (!user?.userId || !subscriptionId) {
+    return rejectWithValue("Missing userId or subscriptionId") as never;
+  }
+
+  const res = await fetch("/api/cancellation/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: user.userId, subscriptionId }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return rejectWithValue(
+      err?.error ?? "Failed to start cancellation"
+    ) as never;
+  }
+  const json = await res.json();
+  return json.cancellation as Cancellation;
+});
 
 type Answer = {
   foundJob?: boolean;
@@ -26,11 +66,18 @@ interface User {
   userVariant: "A" | "B";
 }
 
+interface Subscript {
+  id: string;
+  user_id: string;
+  status: "active" | "canceled" | "pending_cancellation";
+}
+
 interface ModalState {
   isOpen: boolean;
   pageName: string;
   answers: Partial<Answer>;
   user?: User;
+  subscription?: Subscript;
 }
 
 const initialState: ModalState = {
@@ -59,12 +106,23 @@ const modalSlice = createSlice({
     setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
     },
+    setSubscription(state, action: PayloadAction<Subscript>) {
+      state.subscription = action.payload;
+    },
     resetModal(state) {
       state.isOpen = false;
       state.pageName = "";
       state.answers = {};
       state.user = undefined;
     },
+  },
+  extraReducers: (b) => {
+    b.addCase(startCancellation.pending, (s) => {});
+    b.addCase(startCancellation.fulfilled, (s, a) => {
+      s.pageName = "screenOne";
+      s.isOpen = true;
+    });
+    b.addCase(startCancellation.rejected, (s, a) => {});
   },
 });
 
@@ -75,5 +133,6 @@ export const {
   setAnswer,
   resetModal,
   setUser,
+  setSubscription,
 } = modalSlice.actions;
 export default modalSlice.reducer;

@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import { openModal, setPageName } from "../lib/features/modal/modalSlice";
+import {
+  openModal,
+  startCancellation,
+  setUser,
+  setSubscription,
+} from "../lib/features/modal/modalSlice";
 import ModalShell from "./components/ModalShell";
 import { SCREENS } from "./screens";
 
 // Mock user data for UI display
 const mockUser = {
   email: "user@example.com",
-  id: "1",
+  id: "550e8400-e29b-41d4-a716-446655440003",
 };
 
 // Mock subscription data for UI display
 const mockSubscriptionData = {
+  id: "2b5ebc2e-5bd2-44e7-82a0-d513477e1709",
+  user_id: "550e8400-e29b-41d4-a716-446655440003",
   status: "active",
   isTrialSubscription: false,
   cancelAtPeriodEnd: false,
@@ -34,8 +41,20 @@ export default function ProfilePage() {
 
   // New state for settings toggle
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    // OPTIONAL: only if your slice exposes these actions
+    dispatch(
+      setUser({
+        userId: mockUser.id,
+        subscriptionPrice: mockSubscriptionData.monthlyPrice,
+        subscriptionCurrentPeriodEnd: mockSubscriptionData.currentPeriodEnd,
+        userVariant: "A", // placeholder; your flow may set this later
+      })
+    );
+    dispatch(setSubscription({ id: mockSubscriptionData.id }));
+  }, [dispatch]);
+
   const isOpen = useAppSelector((state) => state.modal.isOpen);
   const pageName = useAppSelector((state) => state.modal.pageName);
   const Screen = SCREENS[pageName];
@@ -52,9 +71,19 @@ export default function ProfilePage() {
     console.log("Navigate to jobs");
   };
 
-  const handleOpenModal = (name: string) => {
-    dispatch(setPageName(name));
-    dispatch(openModal());
+  const beginCancellation = async () => {
+    try {
+      // If your thunk reads IDs from state, no args are needed:
+      await dispatch(startCancellation()).unwrap();
+
+      // Thunk fulfillment should have stored the cancellation in state
+      // and (optionally) set the first page via extraReducers.
+      // Now open the modal:
+      dispatch(openModal());
+    } catch (e) {
+      console.error("Failed to start cancellation:", e);
+      // Optionally: show a toast
+    }
   };
 
   // Example: close modal
@@ -379,7 +408,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={() => {
-                        handleOpenModal("screenOne");
+                        beginCancellation();
                       }}
                       className="inline-flex items-center justify-center w-full px-4 py-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-200 shadow-sm group"
                     >
