@@ -39,6 +39,7 @@ export default function AcceptedOffer() {
     //close page and undo user cancellation
     await dispatch(acceptDownsell()).unwrap();
     dispatch(closeModal());
+    dispatch(resetModal());
   };
 
   return (

@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   setAnswer,
   setPageName,
+  setStep,
   updateCancellationAnswers,
 } from "@/lib/features/modal/modalSlice";
 
@@ -23,6 +24,7 @@ export default function FoundJobQ1() {
     // Go to next page
     await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("foundJobQ2"));
+    dispatch(setStep({ total: 3, active: 2 }));
   };
 
   return (

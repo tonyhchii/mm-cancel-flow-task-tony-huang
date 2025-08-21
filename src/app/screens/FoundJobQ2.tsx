@@ -3,6 +3,7 @@
 import {
   setAnswer,
   setPageName,
+  setStep,
   updateCancellationAnswers,
 } from "@/lib/features/modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -22,6 +23,7 @@ export default function FoundJobQ2() {
     dispatch(setAnswer({ foundFeedback: text }));
     await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("foundJobQ3"));
+    dispatch(setStep({ total: 3, active: 3 }));
   };
 
   const updateText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

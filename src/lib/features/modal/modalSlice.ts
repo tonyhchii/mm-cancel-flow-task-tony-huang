@@ -128,6 +128,7 @@ interface Subscript {
 interface ModalState {
   cancellationId: string;
   isOpen: boolean;
+  step?: { total: number; active: number };
   pageName: string;
   answers: Partial<Answer>;
   user: User;
@@ -158,6 +159,9 @@ const modalSlice = createSlice({
     closeModal(state) {
       state.isOpen = false;
     },
+    clearStep(state) {
+      state.step = undefined;
+    },
     setPageName(state, action: PayloadAction<string>) {
       state.pageName = action.payload;
     },
@@ -170,16 +174,14 @@ const modalSlice = createSlice({
     setSubscription(state, action: PayloadAction<Subscript>) {
       state.subscription = action.payload;
     },
+    setStep(state, action: PayloadAction<{ total: number; active: number }>) {
+      state.step = action.payload;
+    },
     resetModal(state) {
       state.isOpen = false;
       state.pageName = "";
       state.answers = {};
-      state.user = {
-        userId: "",
-        subscriptionPrice: 0,
-        subscriptionCurrentPeriodEnd: "",
-        userVariant: "A",
-      };
+      state.step = undefined;
     },
   },
   extraReducers: (b) => {
@@ -201,6 +203,8 @@ export const {
   setAnswer,
   resetModal,
   setUser,
+  setStep,
+  clearStep,
   setSubscription,
 } = modalSlice.actions;
 export default modalSlice.reducer;

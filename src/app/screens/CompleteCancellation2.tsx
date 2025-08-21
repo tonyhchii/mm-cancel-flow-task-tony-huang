@@ -36,6 +36,7 @@ export default function SubscriptionCancelledBody() {
   const backToJobs = async () => {
     await dispatch(completeCancellation()).unwrap();
     dispatch(closeModal());
+    dispatch(resetModal());
   };
 
   return (

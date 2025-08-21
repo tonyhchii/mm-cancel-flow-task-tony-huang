@@ -6,6 +6,8 @@ import {
   acceptDownsell,
   setAnswer,
   setPageName,
+  setStep,
+  clearStep,
   updateCancellationAnswers,
 } from "@/lib/features/modal/modalSlice";
 
@@ -22,6 +24,7 @@ export default function NoJobQ2() {
 
   const fullPrice = user?.subscriptionPrice ?? 25;
   const discounted = (fullPrice / 2).toFixed(2);
+  const currStep = useAppSelector((s) => s.modal.step);
 
   const allAnswered = Boolean(
     answers.rolesApplied && answers.emailedDirectly && answers.interviews
@@ -31,12 +34,21 @@ export default function NoJobQ2() {
     await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
+    dispatch(clearStep());
   };
 
   const onContinue = async () => {
+    const total = currStep?.total ?? 3;
+    const nextActive = Math.min((currStep?.active ?? 1) + 1, total);
     if (allAnswered) {
       await dispatch(updateCancellationAnswers({ answers })).unwrap();
       dispatch(setPageName("noJobQ3"));
+      dispatch(
+        setStep({
+          total: total,
+          active: nextActive,
+        })
+      );
     }
   };
 
@@ -90,7 +102,7 @@ export default function NoJobQ2() {
       <button
         disabled={!allAnswered}
         onClick={onContinue}
-        className="mt-3 w-full rounded-[12px] border border-gray-300 bg-gray-100 px-4 py-3 text-[15px] font-medium text-gray-700
+        className="mt-3 w-full rounded-[12px] border border-gray-300 bg-gray-100 px-2 py-2 text-[15px] font-medium text-gray-700
                    disabled:opacity-60 hover:enabled:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
       >
         Continue

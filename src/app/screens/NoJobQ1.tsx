@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   acceptDownsell,
+  clearStep,
   setAnswer,
   setPageName,
+  setStep,
 } from "@/lib/features/modal/modalSlice";
 
 // Tweak these to match your flow
@@ -17,13 +19,23 @@ const DISCOUNTED = 12.5;
 export default function NoJobQ1() {
   const dispatch = useAppDispatch();
 
+  const currStep = useAppSelector((s) => s.modal.step);
   const accept = async () => {
     await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
+    dispatch(clearStep());
   };
 
   const decline = () => {
+    const total = currStep?.total ?? 3;
+    const nextActive = Math.min((currStep?.active ?? 1) + 1, total);
+    dispatch(
+      setStep({
+        total: total,
+        active: nextActive,
+      })
+    );
     dispatch(setAnswer({ downsellAccepted: false }));
     dispatch(setPageName("noJobQ2"));
   };
@@ -78,7 +90,7 @@ export default function NoJobQ1() {
       {/* No thanks */}
       <button
         onClick={decline}
-        className="w-full rounded-[12px] border border-gray-300 bg-white px-4 py-3 text-[15px] font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
+        className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-[15px] font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
       >
         No thanks
       </button>

@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   closeModal,
   completeCancellation,
+  resetModal,
 } from "@/lib/features/modal/modalSlice";
 import Image from "next/image";
 
@@ -21,6 +22,7 @@ export default function CompleteCancellation() {
     // TODO: DB UPDATE and other logic
     await dispatch(completeCancellation()).unwrap();
     dispatch(closeModal());
+    dispatch(resetModal());
   };
 
   return (

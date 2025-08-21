@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
+  clearStep,
   setAnswer,
   setPageName,
   updateCancellationAnswers,
@@ -29,6 +30,7 @@ export default function FoundJobQ3() {
   const onVisaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVisaType(e.target.value);
     dispatch(setAnswer({ visaType: e.target.value }));
+    dispatch(clearStep());
   };
 
   const complete = async () => {

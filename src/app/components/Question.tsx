@@ -27,11 +27,11 @@ export default function Question<T extends string>({
               key={opt as string}
               type="button"
               onClick={() => onChange(opt)}
-              className={`min-w-0 whitespace-normal text-center rounded-[12px] px-3 py-3 text-[14px] font-semibold border transition
+              className={`min-w-0 whitespace-normal text-center rounded-[12px] px-2 py-2 text-[14px] font-semibold transition
                 ${
                   active
-                    ? "bg-gray-700 text-white border-gray-900"
-                    : "bg-gray-200 text-gray-700 border-gray-200 hover:bg-gray-50"
+                    ? "bg-gray-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-150"
                 }`}
             >
               {render ? render(opt) : (opt as string)}

@@ -1,6 +1,10 @@
 "use client";
 
-import { setAnswer, setPageName } from "@/lib/features/modal/modalSlice";
+import {
+  setAnswer,
+  setPageName,
+  setStep,
+} from "@/lib/features/modal/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 export default function ScreenOne() {
@@ -11,9 +15,17 @@ export default function ScreenOne() {
     dispatch(setAnswer({ foundJob: false }));
     if (variant == "A") {
       dispatch(setPageName("noJobQ2"));
+      dispatch(setStep({ total: 2, active: 1 }));
     } else {
       dispatch(setPageName("noJobQ1"));
+      dispatch(setStep({ total: 3, active: 1 }));
     }
+  };
+
+  const goFoundJob = () => {
+    dispatch(setAnswer({ foundJob: true }));
+    dispatch(setPageName("foundJobQ1"));
+    dispatch(setStep({ total: 3, active: 1 }));
   };
   return (
     <div className="flex-1">
@@ -38,8 +50,7 @@ export default function ScreenOne() {
                      text-[16px] font-semibold text-warm-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]
                      hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
           onClick={() => {
-            dispatch(setAnswer({ foundJob: true }));
-            dispatch(setPageName("foundJobQ1"));
+            goFoundJob();
           }}
         >
           Yes, I’ve found a job

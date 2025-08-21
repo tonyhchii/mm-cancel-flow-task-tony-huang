@@ -1,8 +1,9 @@
 "use client";
 
 import CityImage from "./CityImage";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { closeModal, resetModal } from "@/lib/features/modal/modalSlice";
+import DotsHeader from "./DotsHeader";
 
 export default function ModalShell({
   children,
@@ -10,8 +11,13 @@ export default function ModalShell({
   children: React.ReactNode;
 }) {
   const dispatch = useAppDispatch();
+  const progress = useAppSelector((s) => s.modal.step);
+  const downsellAccepted = useAppSelector(
+    (s) => s.modal.answers?.downsellAccepted
+  );
   const handleClose = () => {
     dispatch(closeModal());
+    dispatch(resetModal());
   };
   return (
     <div
@@ -45,13 +51,24 @@ export default function ModalShell({
           </button>
 
           {/* Title */}
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col gap-2 md:flex-row md:justify-center">
             <h2
               id="cancel-title"
               className="text-[14px] md:text-[16px] font-medium text-warm-800"
             >
-              Subscription Cancellation
+              {downsellAccepted
+                ? "Subscription Continued"
+                : "Subscription Cancellation"}
             </h2>
+
+            {progress ? (
+              <div className="mt-1 flex items-center md:justify-center gap-3">
+                <DotsHeader total={progress.total} active={progress.active} />
+                <span className="text-xs text-gray-500">
+                  Step {progress.active} of {progress.total}
+                </span>
+              </div>
+            ) : null}
           </div>
 
           {/* Dots + step */}

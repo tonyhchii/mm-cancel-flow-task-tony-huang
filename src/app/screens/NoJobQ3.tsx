@@ -7,6 +7,7 @@ import {
   setPageName,
   updateCancellationAnswers,
   acceptDownsell,
+  clearStep,
 } from "@/lib/features/modal/modalSlice";
 
 type ReasonKey =
@@ -32,6 +33,7 @@ export default function NoJobQ3() {
     await dispatch(acceptDownsell()).unwrap();
     dispatch(setAnswer({ downsellAccepted: true }));
     dispatch(setPageName("acceptedOffer"));
+    dispatch(clearStep());
   };
 
   const completeCancel = async () => {
@@ -39,6 +41,7 @@ export default function NoJobQ3() {
     // TODO: call your cancel API, then navigate:
     await dispatch(updateCancellationAnswers({ answers })).unwrap();
     dispatch(setPageName("cancellationComplete2"));
+    dispatch(clearStep());
   };
 
   const reasons: { key: ReasonKey; label: string }[] = [
